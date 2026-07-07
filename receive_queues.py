@@ -80,7 +80,7 @@ def runthat(switch_q_table, switch, mri, path_dicts, counter, index1, index2, in
         print('s{0}'.format(index1+1), new_paths.path_weights, new_paths.action, new_paths.path_queues[::-1])
 
 
-        p4info_file_path = os.path.join(os.getcwd(), 'build/load_balance_advanced.p4.p4info.txt')
+        p4info_file_path = os.path.join(os.getcwd(), 'build/load_balance_advanced.p4.p4info.txtpb')
         p4info_helper = p4runtime_lib.helper.P4InfoHelper(p4info_file_path)
 
         switch.MasterArbitrationUpdate()

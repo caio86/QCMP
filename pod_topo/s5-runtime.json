@@ -1,6 +1,6 @@
 {
   "target": "bmv2",
-  "p4info": "build/load_balance_advanced.p4.p4info.txt",
+  "p4info": "build/load_balance_advanced.p4.p4info.txtpb",
   "bmv2_json": "build/load_balance_advanced.json",
   "table_entries": [
     {
