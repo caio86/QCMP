@@ -12,11 +12,33 @@
     {
       "table": "MyIngress.ecmp_group",
       "match": {
-        "hdr.ipv4.dstAddr": ["10.0.6.11", 32]
+        "hdr.ipv4.dstAddr": ["10.0.4.11", 32]
       },
       "action_name": "MyIngress.set_ecmp_select",
       "action_params": {
-        "ecmp_count": 100
+        "ecmp_count": 0
+      }
+    },
+    {
+      "table": "MyIngress.ecmp_nhop",
+      "match": {
+        "meta.ecmp_select": 0
+      },
+      "action_name": "MyIngress.set_nhop",
+      "action_params": {
+        "nhop_dmac": "00:00:00:01:03:00",
+        "nhop_ipv4": "10.0.2.0",
+	      "port" : 3
+      }
+    },
+    {
+      "table": "MyEgress.send_frame",
+      "match": {
+        "standard_metadata.egress_port": 3
+      },
+      "action_name": "MyEgress.rewrite_mac",
+      "action_params": {
+        "smac": "00:00:00:01:03:00"
       }
     },
     {
@@ -27,16 +49,6 @@
       "action_name": "MyEgress.rewrite_mac",
       "action_params": {
         "smac": "00:00:00:01:04:00"
-      }
-    },
-    {
-      "table": "MyEgress.send_frame",
-      "match": {
-        "standard_metadata.egress_port": 5
-      },
-      "action_name": "MyEgress.rewrite_mac",
-      "action_params": {
-        "smac": "00:00:00:01:05:00"
       }
     },
     {
