@@ -43,39 +43,39 @@ def main(p4info_file_path, bmv2_file_path):
         address='127.0.0.1:50051',
         device_id=0,
         proto_dump_file='logs/s1-p4runtime-requests.txt')
-    s2 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
-        name='s2',
-        address='127.0.0.1:50052',
-        device_id=1,
-        proto_dump_file='logs/s2-p4runtime-requests.txt')
-    s3 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
-        name='s3',
-        address='127.0.0.1:50053',
-        device_id=2,
-        proto_dump_file='logs/s3-p4runtime-requests.txt')
+    # s2 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
+    #     name='s2',
+    #     address='127.0.0.1:50052',
+    #     device_id=1,
+    #     proto_dump_file='logs/s2-p4runtime-requests.txt')
+    # s3 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
+    #     name='s3',
+    #     address='127.0.0.1:50053',
+    #     device_id=2,
+    #     proto_dump_file='logs/s3-p4runtime-requests.txt')
 
 
     # Send master arbitration update message to establish this controller as
     # master (required by P4Runtime before performing any other write operation)
     s1.MasterArbitrationUpdate()
-    s2.MasterArbitrationUpdate()
-    s3.MasterArbitrationUpdate()
+    # s2.MasterArbitrationUpdate()
+    # s3.MasterArbitrationUpdate()
 
 
-    nhop_dmacs = ["00:00:00:00:01:04", "00:00:00:00:01:05"]
+    nhop_dmacs = ["00:00:00:00:01:03", "00:00:00:00:01:04"]
     nhop_ipv4s = ["10.0.2.0", "10.0.3.0"]
-    ports = [4, 5]
+    ports = [3, 4]
     init_path_weights(p4info_helper, s1, nhop_dmacs, nhop_ipv4s, ports)
 
-    nhop_dmacs = ["00:00:00:00:02:03", "00:00:00:00:02:04"]
-    nhop_ipv4s = ["10.0.4.0", "10.0.5.0"]
-    ports = [3, 4]
-    init_path_weights(p4info_helper, s2, nhop_dmacs, nhop_ipv4s, ports)
+    # nhop_dmacs = ["00:00:00:00:02:03", "00:00:00:00:02:04"]
+    # nhop_ipv4s = ["10.0.4.0", "10.0.5.0"]
+    # ports = [3, 4]
+    # init_path_weights(p4info_helper, s2, nhop_dmacs, nhop_ipv4s, ports)
 
-    nhop_dmacs = ["00:00:00:00:03:03", "00:00:00:00:03:04"]
-    nhop_ipv4s = ["10.0.4.0", "10.0.5.0"]
-    ports = [3, 4]
-    init_path_weights(p4info_helper, s3, nhop_dmacs, nhop_ipv4s, ports)
+    # nhop_dmacs = ["00:00:00:00:03:03", "00:00:00:00:03:04"]
+    # nhop_ipv4s = ["10.0.4.0", "10.0.5.0"]
+    # ports = [3, 4]
+    # init_path_weights(p4info_helper, s3, nhop_dmacs, nhop_ipv4s, ports)
 
     # Uncomment the following line to read table entries from s1
     # readTableRules(p4info_helper, s1)
