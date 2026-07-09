@@ -78,7 +78,7 @@ def main(p4info_file_path, bmv2_file_path):
     # init_path_weights(p4info_helper, s3, nhop_dmacs, nhop_ipv4s, ports)
 
     # Uncomment the following line to read table entries from s1
-    readTableRules(p4info_helper, s1)
+    # readTableRules(p4info_helper, s1)
     # readTableRules(p4info_helper, s2)
     # readTableRules(p4info_helper, s3)
     # readTableRules(p4info_helper, s4)
