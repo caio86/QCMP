@@ -163,7 +163,7 @@ def main():
     path_dicts = [s1_path_dict]
     counter = [[0, 0]]
     reset_params = [[]]
-    iface = 's1-eth3'
+    iface = 's1-eth2'
     print("sniffing on %s" % iface)
     sys.stdout.flush()
     sniff(filter="ip", iface = iface,
