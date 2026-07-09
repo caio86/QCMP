@@ -26,7 +26,7 @@ import p4runtime_lib.helper
 from q_table import (path_stats,
                      q_table)
 
-old_paths = [path_stats([0, 0], [50, 50]), path_stats([0, 0], [50, 50]), path_stats([0, 0], [50, 50])]
+old_paths = [path_stats([0, 0], [50, 50])]
 
 class SwitchTrace(Packet):
     fields_desc = [ IntField("swid", 0),
@@ -97,76 +97,76 @@ def runthat(switch_q_table, switch, mri, path_dicts, counter, index1, index2, in
             counter[index1][i] = 0
 
 
-def handle_pkt(pkt, s1_q_table, s2_q_table, s3_q_table, path_dicts, counter, reset_params):
+def handle_pkt(pkt, s1_q_table, path_dicts, counter, reset_params):
 
-    # pkt.show2()
-    if pkt[IP]:
+    pkt.show2()
+    # if pkt[IP]:
 
-        mri=pkt[IP][IPOption_MRI]
-        path_len = len(mri.swtraces)
+    #     mri=pkt[IP][IPOption_MRI]
+    #     path_len = len(mri.swtraces)
 
-        if path_len == 3:
+    #     if path_len == 3:
 
-            s1 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
-                name='s1',
-                address='127.0.0.1:50051',
-                device_id=0)
+    #         s1 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
+    #             name='s1',
+    #             address='127.0.0.1:50051',
+    #             device_id=0)
 
-            nhop_dmacs = ["00:00:00:00:01:04", "00:00:00:00:01:05"]
-            nhop_ipv4s = ["10.0.2.0", "10.0.3.0"]
-            ports = [4, 5]
-            diff_switches = [2, 3]
+    #         nhop_dmacs = ["00:00:00:00:01:04", "00:00:00:00:01:05"]
+    #         nhop_ipv4s = ["10.0.2.0", "10.0.3.0"]
+    #         ports = [4, 5]
+    #         diff_switches = [2, 3]
 
-            runthat(s1_q_table, s1, mri, path_dicts, counter, 0, 2, 1, diff_switches, nhop_dmacs, nhop_ipv4s, ports, reset_params)
+    #         runthat(s1_q_table, s1, mri, path_dicts, counter, 0, 2, 1, diff_switches, nhop_dmacs, nhop_ipv4s, ports, reset_params)
 
-        else:
-            if mri.swtraces[3].swid == 2:
-                s2 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
-                    name='s2',
-                    address='127.0.0.1:50052',
-                    device_id=1)
+    #     else:
+    #         if mri.swtraces[3].swid == 2:
+    #             s2 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
+    #                 name='s2',
+    #                 address='127.0.0.1:50052',
+    #                 device_id=1)
 
-                nhop_dmacs = ["00:00:00:00:02:03", "00:00:00:00:02:04"]
-                nhop_ipv4s = ["10.0.4.0", "10.0.5.0"]
-                ports = [3, 4]
-                diff_switches = [4, 5]
+    #             nhop_dmacs = ["00:00:00:00:02:03", "00:00:00:00:02:04"]
+    #             nhop_ipv4s = ["10.0.4.0", "10.0.5.0"]
+    #             ports = [3, 4]
+    #             diff_switches = [4, 5]
 
-                runthat(s2_q_table, s2, mri, path_dicts, counter, 1, 3, 2, diff_switches, nhop_dmacs, nhop_ipv4s, ports, reset_params)
+    #             runthat(s2_q_table, s2, mri, path_dicts, counter, 1, 3, 2, diff_switches, nhop_dmacs, nhop_ipv4s, ports, reset_params)
 
-            elif mri.swtraces[3].swid == 3:
-                s3 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
-                    name='s3',
-                    address='127.0.0.1:50053',
-                    device_id=2)
+    #         elif mri.swtraces[3].swid == 3:
+    #             s3 = p4runtime_lib.bmv2.Bmv2SwitchConnection(
+    #                 name='s3',
+    #                 address='127.0.0.1:50053',
+    #                 device_id=2)
 
-                nhop_dmacs = ["00:00:00:00:03:03", "00:00:00:00:03:04"]
-                nhop_ipv4s = ["10.0.4.0", "10.0.5.0"]
-                ports = [3, 4]
-                diff_switches = [4, 5]
+    #             nhop_dmacs = ["00:00:00:00:03:03", "00:00:00:00:03:04"]
+    #             nhop_ipv4s = ["10.0.4.0", "10.0.5.0"]
+    #             ports = [3, 4]
+    #             diff_switches = [4, 5]
 
-                runthat(s3_q_table, s3, mri, path_dicts, counter, 2, 3, 2, diff_switches, nhop_dmacs, nhop_ipv4s, ports, reset_params)
+    #             runthat(s3_q_table, s3, mri, path_dicts, counter, 2, 3, 2, diff_switches, nhop_dmacs, nhop_ipv4s, ports, reset_params)
 
 
-    else:
-        print("cannot find IP header in the packet")
+    # else:
+        # print("cannot find IP header in the packet")
 
     sys.stdout.flush()
 
 def main():
     s1_q_table = q_table()
-    s2_q_table = q_table()
-    s3_q_table = q_table()
+    # s2_q_table = q_table()
+    # s3_q_table = q_table()
     s1_path_dict = {}
-    s2_path_dict = {}
-    s3_path_dict = {}
-    path_dicts = [s1_path_dict, s2_path_dict, s3_path_dict]
-    counter = [[0, 0], [0, 0], [0, 0]]
-    reset_params = [[],[],[]]
+    # s2_path_dict = {}
+    # s3_path_dict = {}
+    path_dicts = [s1_path_dict]
+    counter = [[0, 0]]
+    reset_params = [[]]
     iface = 's1-eth3'
     print("sniffing on %s" % iface)
     sys.stdout.flush()
     sniff(filter="ip", iface = iface,
-          prn = lambda x: handle_pkt(x, s1_q_table, s2_q_table, s3_q_table, path_dicts, counter, reset_params))
+          prn = lambda x: handle_pkt(x, s1_q_table, path_dicts, counter, reset_params))
 
 if __name__ == '__main__':
     main()
