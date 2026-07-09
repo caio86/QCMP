@@ -152,6 +152,12 @@ def handle_pkt(pkt, s1_q_table, path_dicts, counter, reset_params):
 
     sys.stdout.flush()
 
+def hasIPMRIOption(pkt):
+     if pkt[IP] and pkt[IP][IPOption_MRI]:
+          return True
+     
+     return False
+
 def main():
     s1_q_table = q_table()
     # s2_q_table = q_table()
@@ -165,7 +171,7 @@ def main():
     iface = 's1-eth3'
     print("sniffing on %s" % iface)
     sys.stdout.flush()
-    sniff(filter="ip", iface = iface,
+    sniff(lfilter=hasIPMRIOption, iface = iface,
           prn = lambda x: handle_pkt(x, s1_q_table, path_dicts, counter, reset_params))
 
 if __name__ == '__main__':
