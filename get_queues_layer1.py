@@ -49,8 +49,8 @@ def main():
 
     print("sending on interface %s" % (iface))
 
-    path1_ports = [4, 5, 3]
-    path2_ports = [5, 5, 3]
+    path1_ports = [3, 1, 2]
+    path2_ports = [4, 1, 2]
     while True:
         for path in (path1_ports, path2_ports):
             i = 0
