@@ -48,7 +48,7 @@ class IPOption_MRI(IPOption):
                                    SwitchTrace,
                                    count_from=lambda pkt:(pkt.count*1)) ]
     
-log_file = "logs/path_weights.csv"
+log_file = "data/path_weights.csv"
 
 with open(log_file, "w") as f:
     f.write("timestamp,path1_weight,path2_weight\n")
