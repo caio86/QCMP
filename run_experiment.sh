@@ -7,13 +7,8 @@ echo " -> Port 4 Queue Rate: $RATE_P4 pps"
 
 TIME=$(date +%s)
 
-umask 000
-
 mkdir logs 2>/dev/null
 mkdir data 2>/dev/null
-
-touch ./data/h3_rx_stats.csv
-touch ./data/path_weights.csv
 
 MININET_FIFO="./logs/mininet_input.fifo"
 rm -f $MININET_FIFO
