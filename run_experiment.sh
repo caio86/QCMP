@@ -5,7 +5,10 @@ echo "Using configuration:"
 echo " -> Port 3 Queue Rate: $RATE_P3 pps"
 echo " -> Port 4 Queue Rate: $RATE_P4 pps"
 
+TIME=$(date +%s)
+
 mkdir logs 2>/dev/null
+mkdir data 2>/dev/null
 
 MININET_FIFO="./logs/mininet_input.fifo"
 rm -f $MININET_FIFO
@@ -57,5 +60,14 @@ sleep 2
 make stop
 kill $MININET_PID 2>/dev/null
 rm -f "$MININET_FIFO"
+
+DATA_DIR="./data/P3_${RATE_P3}_P4_${RATE_P4}_${TIME}"
+
+mkdir $DATA_DIR
+
+mv "./data/h3_rx_stats.csv" "./data/path_weights.csv" -t "$DATA_DIR"
+
+echo "Saving collected data to ${DATA_DIR}"
+sleep 1
 
 echo "Done"
