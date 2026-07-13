@@ -13,7 +13,7 @@ while True:
 
         print("Rx packets:", rx_packets)
 
-        with open(log_file, "r") as f:
+        with open(log_file, "a") as f:
             f.write(f"{time.time()},{rx_packets}\n")
 
     except KeyboardInterrupt:
