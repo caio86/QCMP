@@ -1,5 +1,5 @@
-RATE_P3=200
-RATE_P4=200
+RATE_P3=$1
+RATE_P4=$2
 
 echo "Using configuration:"
 echo " -> Port 3 Queue Rate: $RATE_P3 pps"
