@@ -1,5 +1,5 @@
 import time
-import os
+import sys
 
 log_file = "./data/h3_rx_stats.csv"
 
@@ -11,12 +11,14 @@ while True:
         with open("/sys/class/net/eth0/statistics/rx_packets", "r") as f:
             rx_packets = f.read().strip()
 
+        print("Rx packets:", rx_packets)
+
         with open(log_file, "r") as f:
             f.write(f"{time.time()},{rx_packets}\n")
 
     except KeyboardInterrupt:
-        break
-    except Exception:
-        pass
+        print("Exiting")
+    except Exception as e:
+        print("Error: ", e, file=sys.stderr)
 
     time.sleep(1)
