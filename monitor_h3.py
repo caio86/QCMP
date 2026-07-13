@@ -4,7 +4,7 @@ import sys
 log_file = "./data/h3_rx_stats.csv"
 
 with open(log_file, "w") as f:
-    f.write("timestmap,rx_packets\n")
+    f.write("timestamp,rx_packets\n")
 
 while True:
     try:
