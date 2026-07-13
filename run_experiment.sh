@@ -67,7 +67,7 @@ mkdir $DATA_DIR
 
 mv "./data/h3_rx_stats.csv" "./data/path_weights.csv" -t "$DATA_DIR"
 
-python3 ./plot_results.py -o "$DATA_DIR/path_weights.csv" "$DATA_DIR/h3_rx_stats.csv"
+python3 ./plot_results.py -o "$DATA_DIR" "$DATA_DIR/path_weights.csv" "$DATA_DIR/h3_rx_stats.csv"
 
 echo "Saving collected data to ${DATA_DIR}/"
 sleep 1
