@@ -51,11 +51,11 @@ class IPOption_MRI(IPOption):
 log_file = "data/path_weights.csv"
 
 with open(log_file, "w") as f:
-    f.write("timestamp,path1_weight,path2_weight\n")
+    f.write("timestamp,path1_weight,path2_weight,path1_queue,path2_queue\n")
 
-def log_current_weights(w1, w2):
+def log_current_weights(w1, w2,q1,q2):
     with open(log_file, "a") as f:
-        f.write(f"{time.time()},{w1},{w2}\n")
+        f.write(f"{int(time.time())},{w1},{w2},{q1},{q2}\n")
 
 def runthat(switch_q_table, switch, mri, path_dicts, counter, index1, index2, index3, diff_switches, nhop_dmacs, nhop_ipv4s, ports, reset_params):
     # index1 : index for where switch queue data is stored in path_dicts (list of dicts)
@@ -89,7 +89,7 @@ def runthat(switch_q_table, switch, mri, path_dicts, counter, index1, index2, in
         new_paths.get_reward(old_paths[index1])
         print('s{0}'.format(index1+1), new_paths.path_weights, new_paths.action, new_paths.path_queues[::-1])
 
-        log_current_weights(new_paths.path_weights[0], new_paths.path_weights[1])
+        log_current_weights(new_paths.path_weights[0], new_paths.path_weights[1], new_paths.path_queues[0], new_paths.path_queues[1])
 
         p4info_file_path = os.path.join(os.getcwd(), 'build/load_balance_advanced.p4.p4info.txtpb')
         p4info_helper = p4runtime_lib.helper.P4InfoHelper(p4info_file_path)

@@ -14,7 +14,7 @@ while True:
         print("Rx packets:", rx_packets)
 
         with open(log_file, "a") as f:
-            f.write(f"{time.time()},{rx_packets}\n")
+            f.write(f"{int(time.time())},{rx_packets}\n")
 
     except KeyboardInterrupt:
         print("Exiting")
