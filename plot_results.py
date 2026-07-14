@@ -43,44 +43,6 @@ def plot_h3_rx(output_dir, h3_rx_stat_path):
     # plt.show()
     plt.savefig(f"{output_dir}/pps.png")
 
-    QCMP_sorted = QCMP_ma.sort_values('values')
-    QCMP_cdf = [x/(len(QCMP_sorted.values)-1) for x in range(len(QCMP_sorted.values))]
-    QCMP_sorted['cdf'] = QCMP_cdf
-
-    plt.axvline(x=252, color='red', linestyle=':')
-    plt.axvline(x=351, color='blue', linestyle=':')
-
-    plt.axvline(x=380, color='grey', linestyle='--')
-    plt.axvline(x=361, color='grey', linestyle='--')
-    plt.axhline(y=0.78, color='grey', linestyle='--')
-    plt.axhline(y=0.38, color='grey', linestyle='--')
-    plt.axhline(y=0.0095, color='grey', linestyle='--')
-
-    plt.tick_params(axis='y', left=True, right=False)
-    plt.tick_params(axis='x', bottom=True, top=False)
-    plt.ylabel('CDF')
-    plt.ylim(bottom=0, top=1)
-    plt.xlabel('Packets per Second')
-    plt.xlim(left=150, right=400)
-    plt.legend(loc=2)
-
-    ax2 = plt.twinx()
-    yticks = [0.010, 0.38, 0.78]
-    yticklabels = ['0.010', '0.38', '0.78']
-    ax2.set_yticks(yticks)
-    ax2.set_yticklabels(yticklabels)
-    plt.tick_params(axis='y', left=False, right=True, labelright=True)
-
-    ax3 = plt.twiny()
-    xticks = [0.844, 0.92]
-    xticklabels = ['95%', '100%']
-    ax3.set_xticks(xticks)
-    ax3.set_xticklabels(xticklabels)
-    plt.tick_params(axis='x', bottom=False, top=True, labeltop=True)
-
-    # plt.show()
-    plt.savefig(f"{output_dir}/cdf.png")
-
 
 def plot_path_weights(output_dir, path_weights_path):
     df = pd.read_csv(path_weights_path)
@@ -88,6 +50,7 @@ def plot_path_weights(output_dir, path_weights_path):
     df["relative_time"] = df["timestamp"] - df["timestamp"].iloc[0]
 
     plt.figure(figsize=(14,6))
+    plt.ylim(bottom=0, top=120)
     plt.plot(df["relative_time"], df["path1_weight"], color="b", label="path1")
     plt.plot(df["relative_time"], df["path2_weight"], color="g", label="path2")
     plt.legend(loc=4, bbox_to_anchor=(1, 0.1))
@@ -95,6 +58,21 @@ def plot_path_weights(output_dir, path_weights_path):
     plt.ylabel('Path Weight')
     # plt.show()
     plt.savefig(f"{output_dir}/path_weight.png")
+
+
+def plot_path_queues(output_dir, path_queues_path):
+    df = pd.read_csv(path_queues_path)
+
+    df["relative_time"] = df["timestamp"] - df["timestamp"].iloc[0]
+
+    plt.figure(figsize=(14,6))
+    plt.plot(df["relative_time"], df["path1_queue"], color="b", label="path1")
+    plt.plot(df["relative_time"], df["path2_queue"], color="g", label="path2")
+    plt.legend(loc=4, bbox_to_anchor=(1, 0.1))
+    plt.xlabel('Time (s)')
+    plt.ylabel('Path Queue')
+    # plt.show()
+    plt.savefig(f"{output_dir}/path_queue.png")
 
 
 def main():
@@ -114,6 +92,7 @@ def main():
 
     plot_h3_rx(output_dir, h3_rx_stat_path)
     plot_path_weights(output_dir, path_weights_path)
+    plot_path_queues(output_dir, path_weights_path)
 
 if __name__ == "__main__":
     main()

@@ -24,17 +24,17 @@ sleep 8
 echo "Starting control plane on switch 1"
 echo "s1 ./set_switches.sh $RATE_P3 $RATE_P4 > logs/s1_runtime.log 2> logs/s1_runtime.err &" > "$MININET_FIFO"
 
-sleep 3
+sleep 1
 
 echo "Initiating Telemetry on host 2"
 echo "h2 python3 get_queues_layer1.py > logs/h2_runtime.log 2> logs/h2_runtime.err &" > "$MININET_FIFO"
 
-sleep 3
+sleep 1
 
 echo "Executing traffic monitor on host 3"
 echo "h3 python3 monitor_h3.py > logs/h3_monitor.log 2> logs/h3_monitor.err &" > "$MININET_FIFO"
 
-sleep 1
+sleep 5
 
 echo "Begin main payload on host 1"
 echo "h1 python3 send.py > logs/h1_runtime.log 2> logs/h1_runtime.err &" > "$MININET_FIFO"
