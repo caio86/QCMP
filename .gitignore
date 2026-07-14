@@ -177,4 +177,4 @@ pyrightconfig.json
 
 .direnv
 .venv
-
+data/
