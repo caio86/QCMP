@@ -13,7 +13,7 @@ python3 initiate_rules.py
 
 simple_switch_CLI --thrift-port 9090 <<< 'set_queue_depth 200'
 simple_switch_CLI --thrift-port 9090 <<< "set_queue_rate $RATE_P3 3"
-simple_switch_CLI --thrift-port 9090 <<< "set_queue_rate $RATE_P3 4"
+simple_switch_CLI --thrift-port 9090 <<< "set_queue_rate $RATE_P4 4"
 
 # simple_switch_CLI --thrift-port 9090 <<< 'set_queue_depth 200'
 # simple_switch_CLI --thrift-port 9090 <<< 'set_queue_rate 200 3'
