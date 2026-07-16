@@ -36,7 +36,7 @@ class IPOption_MRI(IPOption):
                                    count_from=lambda pkt:(pkt.count*1)) ]
 
 def send_packets(packets):
-    sendpfast(packets, pps=200, loop=40, iface='eth0')
+    sendpfast(packets, pps=200, loop=20, iface='eth0')
 
 def main():
 
