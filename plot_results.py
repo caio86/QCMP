@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
@@ -44,8 +45,9 @@ def plot_h3_rx(h3_rx_stat_path, ax: Axes | None = None, pps=400):
     ax.set_ylim(bottom=0, top=pps+20)
     ax.plot(time, QCMP_ma, color='b', label = "QCMP")
     ax.plot(time, QCMP_drops_ma, color='b', label = "QCMP Drops", linestyle='--')
-    ax.set_title("Packets per Second")
+    # ax.set_title("Packets per Second")
     ax.legend(loc=4, bbox_to_anchor=(1, 0.1))
+    ax.grid(alpha=0.3)
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Packets per Second')
 
@@ -64,11 +66,13 @@ def plot_path_weights(path_weights_path, ax: Axes | None = None):
         fig, ax = plt.subplots(figsize=(14,6))
 
     ax.set_xlim(left=0, right=max(df["relative_time"]))
-    ax.set_ylim(bottom=0, top=120)
+    ax.set_ylim(bottom=0, top=110)
+    ax.set_yticks(np.arange(0, 110, 10))
     ax.plot(df["relative_time"], df["path1_weight"], color="b", label="path1")
     ax.plot(df["relative_time"], df["path2_weight"], color="g", label="path2")
-    ax.set_title("Path Weights")
+    # ax.set_title("Path Weights")
     ax.legend(loc=4, bbox_to_anchor=(1, 0.1))
+    ax.grid(alpha=0.3)
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Path Weight')
 
@@ -89,8 +93,9 @@ def plot_path_queues(path_queues_path, ax: Axes | None =None):
     ax.set_xlim(left=0, right=max(df["relative_time"]))
     ax.plot(df["relative_time"], df["path1_queue"], color="b", label="path1")
     ax.plot(df["relative_time"], df["path2_queue"], color="g", label="path2")
-    ax.set_title("Path Queues")
+    # ax.set_title("Path Queues")
     ax.legend(loc=4, bbox_to_anchor=(1, 0.1))
+    ax.grid(alpha=0.3)
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Path Queue')
 
@@ -103,7 +108,7 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-o", "--output-dir", help="Output dir to store plotted results", required=True)
-    parser.add_argument("-P", "--pps", help="Packets per second", required=False)
+    parser.add_argument("-P", "--pps", help="Packets per second", type=int, required=False)
     parser.add_argument("path_weights_path", help="Path to path weights csv data")
     parser.add_argument("h3_rx_stat_path", help="Path to h3 rx stat csv data")
 
@@ -127,8 +132,9 @@ def main():
     fig3.savefig(output_dir / "path_queue.png")
     plt.close(fig3)
 
-
-    fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(14,5*3))
+    fig = plt.figure(figsize=(14, 5*3))
+    gs = fig.add_gridspec(3)
+    axes = gs.subplots(sharex=True)
 
     plot_h3_rx(h3_rx_stat_path, ax=axes[0], pps=args.pps)
     plot_path_weights(path_weights_path, ax=axes[1])
