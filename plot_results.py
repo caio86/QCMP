@@ -1,9 +1,12 @@
-from pathlib import Path
 import argparse
+from pathlib import Path
+
 import pandas as pd
 from matplotlib import pyplot as plt
+from matplotlib.axes import Axes
 
-def plot_h3_rx(output_dir, h3_rx_stat_path):
+
+def plot_h3_rx(h3_rx_stat_path, ax: Axes | None = None, pps=400):
     df = pd.read_csv(h3_rx_stat_path)
 
     df["time_diff"] = df["timestamp"].diff()
@@ -24,7 +27,7 @@ def plot_h3_rx(output_dir, h3_rx_stat_path):
     queue = 0
     QCMP_drops = []
     for i in QCMP_values:
-        queue += 200 - i
+        queue += pps - i
         QCMP_drops.append(max(0, queue - 100))
         queue = min(queue, 100)
 
@@ -32,53 +35,75 @@ def plot_h3_rx(output_dir, h3_rx_stat_path):
     QCMP_drops_df = pd.DataFrame({'values': QCMP_drops})
     QCMP_drops_ma = QCMP_drops_df.rolling(window=10, min_periods=1).mean()
 
-    fig, ax = plt.subplots(figsize=(14, 6))
+    standalone = ax is None
+
+    if standalone:
+        fig, ax = plt.subplots(figsize=(14, 6))
+
     ax.set_xlim(left=0, right=max(time))
-    ax.set_ylim(bottom=0, top=420)
+    ax.set_ylim(bottom=0, top=pps+20)
     ax.plot(time, QCMP_ma, color='b', label = "QCMP")
     ax.plot(time, QCMP_drops_ma, color='b', label = "QCMP Drops", linestyle='--')
+    ax.set_title("Packets per Second")
     ax.legend(loc=4, bbox_to_anchor=(1, 0.1))
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Packets per Second')
-    # plt.show()
-    plt.savefig(f"{output_dir}/pps.png")
+
+    if standalone:
+        return fig
+    return None
 
 
-def plot_path_weights(output_dir, path_weights_path):
+def plot_path_weights(path_weights_path, ax: Axes | None = None):
     df = pd.read_csv(path_weights_path)
 
     df["relative_time"] = df["timestamp"] - df["timestamp"].iloc[0]
 
-    plt.figure(figsize=(14,6))
-    plt.ylim(bottom=0, top=120)
-    plt.plot(df["relative_time"], df["path1_weight"], color="b", label="path1")
-    plt.plot(df["relative_time"], df["path2_weight"], color="g", label="path2")
-    plt.legend(loc=4, bbox_to_anchor=(1, 0.1))
-    plt.xlabel('Time (s)')
-    plt.ylabel('Path Weight')
-    # plt.show()
-    plt.savefig(f"{output_dir}/path_weight.png")
+    standalone = ax is None
+    if standalone:
+        fig, ax = plt.subplots(figsize=(14,6))
+
+    ax.set_xlim(left=0, right=max(df["relative_time"]))
+    ax.set_ylim(bottom=0, top=120)
+    ax.plot(df["relative_time"], df["path1_weight"], color="b", label="path1")
+    ax.plot(df["relative_time"], df["path2_weight"], color="g", label="path2")
+    ax.set_title("Path Weights")
+    ax.legend(loc=4, bbox_to_anchor=(1, 0.1))
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Path Weight')
+
+    if standalone:
+        return fig
+    return None
 
 
-def plot_path_queues(output_dir, path_queues_path):
+def plot_path_queues(path_queues_path, ax: Axes | None =None):
     df = pd.read_csv(path_queues_path)
 
     df["relative_time"] = df["timestamp"] - df["timestamp"].iloc[0]
 
-    plt.figure(figsize=(14,6))
-    plt.plot(df["relative_time"], df["path1_queue"], color="b", label="path1")
-    plt.plot(df["relative_time"], df["path2_queue"], color="g", label="path2")
-    plt.legend(loc=4, bbox_to_anchor=(1, 0.1))
-    plt.xlabel('Time (s)')
-    plt.ylabel('Path Queue')
-    # plt.show()
-    plt.savefig(f"{output_dir}/path_queue.png")
+    standalone = ax is None
+    if standalone:
+        fig, ax = plt.subplots(figsize=(14,6))
+
+    ax.set_xlim(left=0, right=max(df["relative_time"]))
+    ax.plot(df["relative_time"], df["path1_queue"], color="b", label="path1")
+    ax.plot(df["relative_time"], df["path2_queue"], color="g", label="path2")
+    ax.set_title("Path Queues")
+    ax.legend(loc=4, bbox_to_anchor=(1, 0.1))
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Path Queue')
+
+    if standalone:
+        return fig
+    return None
 
 
 def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-o", "--output-dir", help="Output dir to store plotted results", required=True)
+    parser.add_argument("-P", "--pps", help="Packets per second", required=False)
     parser.add_argument("path_weights_path", help="Path to path weights csv data")
     parser.add_argument("h3_rx_stat_path", help="Path to h3 rx stat csv data")
 
@@ -90,9 +115,30 @@ def main():
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    plot_h3_rx(output_dir, h3_rx_stat_path)
-    plot_path_weights(output_dir, path_weights_path)
-    plot_path_queues(output_dir, path_weights_path)
+    fig1 = plot_h3_rx(h3_rx_stat_path, pps=args.pps)
+    fig1.savefig(output_dir / "pps.png")
+    plt.close(fig1)
+
+    fig2 = plot_path_weights(path_weights_path)
+    fig2.savefig(output_dir / "path_weight.png")
+    plt.close(fig2)
+
+    fig3 = plot_path_queues(path_weights_path)
+    fig3.savefig(output_dir / "path_queue.png")
+    plt.close(fig3)
+
+
+    fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(14,5*3))
+
+    plot_h3_rx(h3_rx_stat_path, ax=axes[0], pps=args.pps)
+    plot_path_weights(path_weights_path, ax=axes[1])
+    plot_path_queues(path_weights_path, ax=axes[2])
+
+    fig.tight_layout()
+
+    fig.savefig(output_dir / "all.png")
+    plt.close(fig)
+
 
 if __name__ == "__main__":
     main()
