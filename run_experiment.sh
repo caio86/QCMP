@@ -1,5 +1,24 @@
-RATE_P3=$1
-RATE_P4=$2
+TOTAL=200
+get_rate() {
+    local val=$1
+    if [[ "$val" =~ ^[0-9]+%$ ]]; then
+        local pct="${val%\%}"
+        echo $(( (TOTAL * pct) / 100 ))
+    elif [[ "$val" =~ ^[0-9]+$ ]]; then
+        echo "$val"
+    else
+        echo "INVALID"
+    fi
+}
+
+
+RATE_P3=$(get_rate "$1")
+RATE_P4=$(get_rate "$2")
+
+if [[ "$RATE_P3" = "INVALID" || $RATE_P4 = "INVALID" ]]; then
+    echo "INVALID input" >&2
+    exit 1
+fi
 
 echo "Using configuration:"
 echo " -> Port 3 Queue Rate: $RATE_P3 pps"

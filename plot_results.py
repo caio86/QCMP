@@ -24,7 +24,7 @@ def plot_h3_rx(output_dir, h3_rx_stat_path):
     queue = 0
     QCMP_drops = []
     for i in QCMP_values:
-        queue += 380 - i
+        queue += 200 - i
         QCMP_drops.append(max(0, queue - 100))
         queue = min(queue, 100)
 
