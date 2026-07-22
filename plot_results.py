@@ -39,7 +39,7 @@ def plot_h3_rx(h3_rx_stat_path, ax: Axes | None = None, pps=400):
     standalone = ax is None
 
     if standalone:
-        fig, ax = plt.subplots(figsize=(14, 6))
+        fig, ax = plt.subplots(figsize=(8, 8))
 
     ax.set_xlim(left=0, right=max(time))
     ax.set_ylim(bottom=0, top=pps+20)
@@ -63,7 +63,7 @@ def plot_path_weights(path_weights_path, ax: Axes | None = None):
 
     standalone = ax is None
     if standalone:
-        fig, ax = plt.subplots(figsize=(14,6))
+        fig, ax = plt.subplots(figsize=(8,8))
 
     ax.set_xlim(left=0, right=max(df["relative_time"]))
     ax.set_ylim(bottom=0, top=110)
@@ -90,7 +90,7 @@ def plot_path_queues(path_queues_path, ax: Axes | None =None):
 
     standalone = ax is None
     if standalone:
-        fig, ax = plt.subplots(figsize=(14,6))
+        fig, ax = plt.subplots(figsize=(8,8))
 
     ax.set_xlim(left=0, right=max(df["relative_time"]))
     ax.plot(df["relative_time"], df["path1_queue"], color="b", label="path1")
@@ -123,28 +123,35 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     fig1 = plot_h3_rx(h3_rx_stat_path, pps=args.pps)
-    fig1.savefig(output_dir / "pps.png")
+    fig1.tight_layout()
+    fig1.savefig(output_dir / "pps.png", dpi=300)
     plt.close(fig1)
 
     fig2 = plot_path_weights(path_weights_path)
-    fig2.savefig(output_dir / "path_weight.png")
+    fig2.tight_layout()
+    fig2.savefig(output_dir / "path_weight.png", dpi=300)
     plt.close(fig2)
 
     fig3 = plot_path_queues(path_weights_path)
-    fig3.savefig(output_dir / "path_queue.png")
+    fig3.tight_layout()
+    fig3.savefig(output_dir / "path_queue.png", dpi=300)
     plt.close(fig3)
 
-    fig = plt.figure(figsize=(14, 5*3))
-    gs = fig.add_gridspec(3)
-    axes = gs.subplots(sharex=True)
+    fig = plt.figure(figsize=(14, 5*2))
+    gs = fig.add_gridspec(2, 2)
+    # axes = gs.subplots(sharex=True)
 
-    plot_h3_rx(h3_rx_stat_path, ax=axes[0], pps=args.pps)
-    plot_path_weights(path_weights_path, ax=axes[1])
-    plot_path_queues(path_weights_path, ax=axes[2])
+    ax_h3 = fig.add_subplot(gs[0:2, 0])
+    ax_weights = fig.add_subplot(gs[0, 1])
+    ax_queues = fig.add_subplot(gs[1, 1], sharex=ax_weights)
+
+    plot_h3_rx(h3_rx_stat_path, ax=ax_h3, pps=args.pps)
+    plot_path_weights(path_weights_path, ax=ax_weights)
+    plot_path_queues(path_weights_path, ax=ax_queues)
 
     fig.tight_layout()
 
-    fig.savefig(output_dir / "all.png")
+    fig.savefig(output_dir / "all.png", dpi=300)
     plt.close(fig)
 
 
