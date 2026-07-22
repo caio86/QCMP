@@ -51,7 +51,7 @@ echo "h2 python3 get_queues_layer1.py > logs/h2_runtime.log 2> logs/h2_runtime.e
 sleep 1
 
 echo "Executing traffic monitor on host 3"
-echo "tshark -q -i eth0 -w - > data/output.pcap" > "$MININET_FIFO"
+echo "h3 tshark -i eth0 -w - > data/output.pcap &" > "$MININET_FIFO"
 echo "h3 python3 monitor_h3.py > logs/h3_monitor.log 2> logs/h3_monitor.err &" > "$MININET_FIFO"
 
 sleep 5
