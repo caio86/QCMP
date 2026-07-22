@@ -45,7 +45,7 @@ def main():
     print("sending on interface %s" % (iface))
 
     pkt =  Ether(src=get_if_hwaddr(iface), dst='ff:ff:ff:ff:ff:ff') / IP(dst='10.0.4.11', options = IPOption_MRI(count=0, swtraces=[]))
-    pkts = [pkt / TCP(dport=1234, sport=random.randint(49152,65535)) for i in range(5000)]
+    pkts = [pkt / UDP(dport=1234, sport=random.randint(49152,65535)) for i in range(5000)]
 
     p = Process(target=send_packets, args=(pkts,))
     print('Packets made')
