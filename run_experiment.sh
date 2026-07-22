@@ -51,6 +51,7 @@ echo "h2 python3 get_queues_layer1.py > logs/h2_runtime.log 2> logs/h2_runtime.e
 sleep 1
 
 echo "Executing traffic monitor on host 3"
+echo "tshark -q -i eth0 -w data/output.pcap" > "$MININET_FIFO"
 echo "h3 python3 monitor_h3.py > logs/h3_monitor.log 2> logs/h3_monitor.err &" > "$MININET_FIFO"
 
 sleep 5
@@ -84,7 +85,7 @@ DATA_DIR="./data/P3_${RATE_P3}_P4_${RATE_P4}_${TIME}"
 
 mkdir $DATA_DIR
 
-mv "./data/h3_rx_stats.csv" "./data/path_weights.csv" -t "$DATA_DIR"
+mv "./data/h3_rx_stats.csv" "./data/path_weights.csv" "./data/output.pcap" -t "$DATA_DIR"
 
 python3 ./plot_results.py -o "$DATA_DIR" --pps $TOTAL "$DATA_DIR/path_weights.csv" "$DATA_DIR/h3_rx_stats.csv"
 
